@@ -3,6 +3,9 @@ obj1 = {
     "name":"John"
 }
 
+const url = 'https://dog.ceo/api/breeds/list/all'
+
+
 class Raza {
 
     nombre;
@@ -14,7 +17,7 @@ class Raza {
     }
 
     getPhoto() {
-        console.log(this.nombre)
+        let req = new XMLHttpRequest()
         req.open('GET',`https://dog.ceo/api/breed/${this.nombre}/images/random`,false)
         req.send(null)
         if(req.status == 200) {
@@ -32,28 +35,35 @@ obtenerRaza = (nombre, variedades) => {
 
 
 
-let req = new XMLHttpRequest()
-req.open('GET', 'https://dog.ceo/api/breeds/list/all', true)
-req.onreadystatechange = (aEvt) => {    
-    if(req.readyState == 4) {
-        if(req.status == 200){
-            let res = JSON.parse(req.responseText)
-            //console.log(res.message)
-            let raza = []
-            for(prop in res.message) {
-                raza.push(obtenerRaza(prop, res.message[prop]))
+function load(url,callback) {
+
+    let req = new XMLHttpRequest()
+    req.onreadystatechange = () => {
+        
+        if(req.readyState == 4) {
+            if(req.status == 200) {
+                let res = JSON.parse(req.responseText)
+                //console.log(res.message)
+                let raza = []
+                for(prop in res.message) {
+                    //console.log(prop)
+                    raza.push(obtenerRaza(prop, res.message[prop]))
+                }
+                callback(raza)
             }
-
-            raza[0].getPhoto()
-            // for(r of raza) {
-            //     //console.log(r.getPhoto())
-            // }
-
         }
-        else
-            console.log("Error loading page")
     }
+
+    req.open('GET', url, true)
+    req.send('')
 }
-req.send(null)
+
+load(url,(raza) => {
+
+    for(r of raza){
+       console.log(r.nombre+": "+r.getPhoto())
+    }
+})
+
 
 
