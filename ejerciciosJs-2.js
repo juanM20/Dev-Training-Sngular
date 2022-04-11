@@ -1,9 +1,6 @@
-
-obj1 = {
-    "name":"John"
-}
-
 const url = 'https://dog.ceo/api/breeds/list/all'
+
+//const resultado = document.getElementById('resultado');
 
 
 class Raza {
@@ -61,7 +58,8 @@ function load(url,callback) {
 load(url,(raza) => {
 
     for(r of raza){
-       console.log(r.nombre+": "+r.getPhoto())
+       console.log(`${r.nombre} : ${r.getPhoto()}`)
+       //resultado.innerHTML += `\n\n${r.nombre} : ${r.getPhoto()}\n\n`
     }
 })
 
